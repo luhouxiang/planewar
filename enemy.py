@@ -6,6 +6,7 @@ class Enemy(pygame.sprite.Sprite):
 
     sound = pygame.mixer.Sound("sound/enemy1_down.wav")
     sound.set_volume(0.3)
+    e1_destroy_index = 0
 
     def __init__(self, bg_size):
         pygame.sprite.Sprite.__init__(self)
@@ -21,7 +22,7 @@ class Enemy(pygame.sprite.Sprite):
         ])
 
         self.width, self.height = bg_size[0], bg_size[1]
-        self.speed = 2
+        self.speed = 3
         self.active = True
         self.rect.left, self.rect.top = \
             randint(0, self.width - self.rect.width), randint((-5)*self.height, 0)
