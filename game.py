@@ -2,7 +2,6 @@
 
 import pygame
 import sys
-import traceback
 import myplane
 import enemy
 import bullet
@@ -222,14 +221,3 @@ def game():
 
         pygame.display.flip()
         clock.tick(60)
-
-
-if __name__ == "__main__":
-    try:
-        game()
-    except SystemExit:
-        pass
-    except:
-        traceback.print_ext()
-        pygame.quit()
-        input()
