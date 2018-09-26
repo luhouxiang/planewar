@@ -2,7 +2,11 @@ import pygame
 from random import *
 
 
-class SmallEnemy(pygame.sprite.Sprite):
+class Enemy(pygame.sprite.Sprite):
+
+    sound = pygame.mixer.Sound("sound/enemy1_down.wav")
+    sound.set_volume(0.3)
+
     def __init__(self, bg_size):
         pygame.sprite.Sprite.__init__(self)
 
@@ -33,4 +37,13 @@ class SmallEnemy(pygame.sprite.Sprite):
         self.active = True
         self.rect.left, self.rect.top = \
             randint(0, self.width - self.rect.width), randint((-5)*self.height, 0)
+
+    @classmethod
+    def get_sound(cls):
+        return cls.sound
+
+    @classmethod
+    def play_sound(cls):
+        cls.sound.play()
+
 

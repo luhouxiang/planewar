@@ -3,6 +3,9 @@ import pygame
 
 
 class MyPlane(pygame.sprite.Sprite):
+    sound = pygame.mixer.Sound("sound/me_down.wav")
+    sound.set_volume(0.4)
+
     def __init__(self, bg_size):
         pygame.sprite.Sprite.__init__(self)
 
@@ -55,6 +58,13 @@ class MyPlane(pygame.sprite.Sprite):
         self.active = True
         self.invincible = True
 
+    @classmethod
+    def get_sound(cls):
+        return cls.sound
+
+    @classmethod
+    def play_sound(cls):
+        cls.sound.play()
 
 
 
