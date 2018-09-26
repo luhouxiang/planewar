@@ -5,6 +5,7 @@ import pygame
 class Bullet(pygame.sprite.Sprite):
     sound = pygame.mixer.Sound("sound/bullet.wav")
     sound.set_volume(0.2)
+    bullet1_index = 0
 
     def __init__(self, position):
         pygame.sprite.Sprite.__init__(self)
