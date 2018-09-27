@@ -4,8 +4,18 @@ from score import Score
 from ground import Ground
 
 
-class Enemy(pygame.sprite.Sprite):
+def gen_enemies(bg_size, num):
+    enemies = pygame.sprite.Group()
+    for i in range(num):
+        e1 = Enemy(bg_size)
+        enemies.add(e1)
+    return enemies
 
+
+class Enemy(pygame.sprite.Sprite):
+    """
+    敌机
+    """
     sound = pygame.mixer.Sound("sound/enemy1_down.wav")
     sound.set_volume(0.3)
     e1_destroy_index = 0

@@ -2,17 +2,22 @@
 import pygame
 from ground import Ground
 from pygame.locals import K_UP, K_DOWN, K_LEFT, K_RIGHT
+from bullet import Bullet
 
 
 class MyPlane(pygame.sprite.Sprite):
+    """
+    我方飞机
+    """
     sound = pygame.mixer.Sound("sound/me_down.wav")
     sound.set_volume(0.4)
     me_destroy_index = 0
+    life_num = 2
     screen = Ground.get_screen()
 
     def __init__(self, bg_size):
         pygame.sprite.Sprite.__init__(self)
-
+        # 生成普通子弹
         self.image1 = pygame.image.load("images/me1.png").convert_alpha()
         self.image2 = pygame.image.load("images/me2.png").convert_alpha()
         self.destroy_images = []
@@ -31,6 +36,10 @@ class MyPlane(pygame.sprite.Sprite):
         self.speed = 10
         self.invincible = False
         self.mask = pygame.mask.from_surface(self.image1)
+
+        self.bullet_list = []
+        for i in range(Bullet.num):
+            self.bullet_list.append(Bullet(self.rect.midtop))
 
     def move_up(self):
         if self.rect.top > 0:

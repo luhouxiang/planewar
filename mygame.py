@@ -5,10 +5,12 @@ import pygamepkg
 import sys
 from myplane import MyPlane
 from enemy import Enemy
+import enemy
 from bullet import Bullet
 from ground import Ground
 from score import Score
 from pygame.locals import QUIT
+
 
 class MyGame:
     bg_size = Ground.get_bg_size()
@@ -21,31 +23,19 @@ class MyGame:
         pass
 
     @classmethod
-    def add_enemies(cls, enemy_list, num):
-        for i in range(num):
-            e1 = Enemy(cls.bg_size)
-            enemy_list.add(e1)
-
-    @classmethod
     def start(cls):
-        life_num = cls.life_num
+
         # 生成我方飞机
         me = MyPlane(cls.bg_size)
+        # 生成敌机
+
+        enemies = enemy.gen_enemies(cls.bg_size, 45)
 
         # 中弹图片索引
-
         MyPlane.me_destroy_index = 0
         Enemy.e1_destroy_index = 0
 
-        enemies = pygame.sprite.Group()
-        # 生成敌机
-        cls.add_enemies(enemies, 45)
-
-        # 生成普通子弹
-        bullet_list = []
-        for i in range(cls.bullet_num):
-            bullet_list.append(Bullet(me.rect.midtop))
-
+        life_num = MyPlane.life_num
         Score.reset()
 
         clock = pygame.time.Clock()
@@ -71,14 +61,10 @@ class MyGame:
                 MyPlane.operation(me)
 
                 # 发射子弹
-                cls.opt_bullet(bullet_list, delay, me, enemies)
+                Bullet.operation(delay, me, enemies)
 
                 # 检测我方飞机是否被撞
-                enemies_down = pygame.sprite.spritecollide(me, enemies, False, pygame.sprite.collide_mask)
-                if enemies_down:
-                    me.active = False
-                    for e in enemies_down:
-                        e.active = False
+                cls.check_plane_crash(enemies, me)
 
                 # 绘制敌机
                 Enemy.draw(delay, enemies)
@@ -109,30 +95,14 @@ class MyGame:
             clock.tick(60)
 
     @classmethod
-    def opt_bullet(cls, bullets, delay, me, enemies):
-        """
-        打子弹
-        :param bullets:
-        :param delay:
-        :param me:
-        :param enemies:
-        :return:
-        """
-        bullet_size = len(bullets)
-        if not (delay % 10):
-            Bullet.play_sound()
-            bullets[Bullet.bullet1_index].reset(me.rect.midtop)
-            Bullet.bullet1_index = (Bullet.bullet1_index + 1) % bullet_size
+    def check_plane_crash(cls, enemies, me):
+        enemies_down = pygame.sprite.spritecollide(me, enemies, False, pygame.sprite.collide_mask)
+        if enemies_down:
+            me.active = False
+            for e in enemies_down:
+                e.active = False
 
-        for b in bullets:
-            if b.active:
-                b.move()
-                cls.screen.blit(b.image, b.rect)
-                enemy_hit = pygame.sprite.spritecollide(b, enemies, False, pygame.sprite.collide_mask)
-                if enemy_hit:
-                    b.active = False
-                    for e in enemy_hit:
-                        e.active = False
+
 
 
 
