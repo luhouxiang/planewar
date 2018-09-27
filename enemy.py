@@ -1,5 +1,7 @@
 import pygame
 from random import *
+from score import Score
+from ground import Ground
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -7,6 +9,7 @@ class Enemy(pygame.sprite.Sprite):
     sound = pygame.mixer.Sound("sound/enemy1_down.wav")
     sound.set_volume(0.3)
     e1_destroy_index = 0
+    screen = Ground.get_screen()
 
     def __init__(self, bg_size):
         pygame.sprite.Sprite.__init__(self)
@@ -47,4 +50,20 @@ class Enemy(pygame.sprite.Sprite):
     def play_sound(cls):
         cls.sound.play()
 
-
+    @classmethod
+    def draw(cls, delay, enemies):
+        # 绘制敌机
+        for each in enemies:
+            if each.active:
+                each.move()
+                cls.screen.blit(each.image, each.rect)
+            else:
+                # 毁灭
+                if not (delay % 3):
+                    if Enemy.e1_destroy_index == 0:
+                        Enemy.play_sound()
+                    cls.screen.blit(each.destroy_images[Enemy.e1_destroy_index], each.rect)
+                    Enemy.e1_destroy_index = (Enemy.e1_destroy_index + 1) % 4
+                    if Enemy.e1_destroy_index == 0:
+                        Score.add(1000)
+                        each.reset()

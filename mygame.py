@@ -8,8 +8,7 @@ from enemy import Enemy
 from bullet import Bullet
 from ground import Ground
 from score import Score
-from pygame.locals import *
-
+from pygame.locals import QUIT
 
 class MyGame:
     bg_size = Ground.get_bg_size()
@@ -48,9 +47,6 @@ class MyGame:
             bullet_list.append(Bullet(me.rect.midtop))
 
         Score.reset()
-        # 统计得分
-        # score = 0
-        # score_font = pygame.font.Font("font/font.ttf", 36)
 
         clock = pygame.time.Clock()
 
@@ -62,11 +58,6 @@ class MyGame:
 
         running = True
 
-        paused = False
-
-        # 用于限制重复打开记录文件
-        recorded = False
-
         while running:
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -75,9 +66,9 @@ class MyGame:
 
             cls.screen.blit(cls.background, (0, 0))
 
-            if life_num and not paused:
+            if life_num:
                 # 操作我的飞机
-                cls.opt_plane(me)
+                MyPlane.operation(me)
 
                 # 发射子弹
                 cls.opt_bullet(bullet_list, delay, me, enemies)
@@ -90,10 +81,10 @@ class MyGame:
                         e.active = False
 
                 # 绘制敌机
-                cls.draw_enemies(delay, enemies)
+                Enemy.draw(delay, enemies)
 
                 # 绘制我方飞机
-                life_num = cls.draw_plane(delay, life_num, me, switch_image)
+                life_num = MyPlane.draw(delay, life_num, me, switch_image)
 
                 # 绘制分数
                 Score.draw_score()
@@ -116,44 +107,6 @@ class MyGame:
 
             pygame.display.flip()
             clock.tick(60)
-
-
-    @classmethod
-    def draw_plane(cls, delay, life_num, me, switch_image):
-        destroy_image_size = len(me.destroy_images)
-        if me.active:
-            if switch_image:
-                cls.screen.blit(me.image1, me.rect)
-            else:
-                cls.screen.blit(me.image2, me.rect)
-        else:
-            if not (delay % 3):
-                if MyPlane.me_destroy_index == 0:
-                    MyPlane.play_sound()
-                cls.screen.blit(me.destroy_images[MyPlane.me_destroy_index], me.rect)
-                MyPlane.me_destroy_index = (MyPlane.me_destroy_index + 1) % destroy_image_size
-                if MyPlane.me_destroy_index == 0:
-                    life_num -= 1
-                    me.reset()
-        return life_num
-
-    @classmethod
-    def draw_enemies(cls, delay, enemies):
-        # 绘制敌机
-        for each in enemies:
-            if each.active:
-                each.move()
-                cls.screen.blit(each.image, each.rect)
-            else:
-                # 毁灭
-                if not (delay % 3):
-                    if Enemy.e1_destroy_index == 0:
-                        Enemy.play_sound()
-                    cls.screen.blit(each.destroy_images[Enemy.e1_destroy_index], each.rect)
-                    Enemy.e1_destroy_index = (Enemy.e1_destroy_index + 1) % 4
-                    if Enemy.e1_destroy_index == 0:
-                        Score.add(1000)
-                        each.reset()
 
     @classmethod
     def opt_bullet(cls, bullets, delay, me, enemies):
@@ -181,18 +134,7 @@ class MyGame:
                     for e in enemy_hit:
                         e.active = False
 
-    @classmethod
-    def opt_plane(cls, me):
-        # 使用键盘操作我方飞机
-        key_pressed = pygame.key.get_pressed()
-        if key_pressed[K_UP]:
-            me.move_up()
-        if key_pressed[K_DOWN]:
-            me.move_down()
-        if key_pressed[K_LEFT]:
-            me.move_left()
-        if key_pressed[K_RIGHT]:
-            me.move_right()
+
 
 
 
