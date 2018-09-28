@@ -3,7 +3,7 @@
 from ground import Ground
 import sys
 import pygame
-import mygame
+import game
 
 
 class Score:
@@ -88,7 +88,7 @@ class Score:
             if cls.again_rect.left < pos[0] < cls.again_rect.right and \
                     cls.again_rect.top < pos[1] < cls.again_rect.bottom:
                 # 调用main函数，重新开始游戏
-                mygame.MyGame.start()
+                game.Game.start()
             # 如果用户点击“结束游戏”
             elif cls.gameover_rect.left < pos[0] < cls.gameover_rect.right and cls.gameover_rect.top < pos[
                 1] < cls.gameover_rect.bottom:

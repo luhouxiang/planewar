@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import pygame
-import mygame
+import game
 import traceback
 
 if __name__ == "__main__":
     try:
-        mygame.MyGame.start()
+        game.Game.start()
     except SystemExit:
         pass
     except:
