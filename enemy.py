@@ -5,6 +5,7 @@ from ground import Ground
 
 
 def gen_enemies(bg_size, num):
+    Enemy.e1_destroy_index = 0
     enemies = pygame.sprite.Group()
     for i in range(num):
         e1 = Enemy(bg_size)
@@ -62,6 +63,7 @@ class Enemy(pygame.sprite.Sprite):
 
     @classmethod
     def draw(cls, delay, enemies):
+
         # 绘制敌机
         for each in enemies:
             if each.active:
