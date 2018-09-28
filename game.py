@@ -3,7 +3,7 @@
 import pygame
 import pygamepkg
 import sys
-from myplane import MyPlane
+from plane import Plane
 from enemy import Enemy
 import enemy
 from bullet import Bullet
@@ -12,12 +12,10 @@ from score import Score
 from pygame.locals import QUIT
 
 
-class MyGame:
+class Game:
     bg_size = Ground.get_bg_size()
     background = Ground.get_background()
     screen = Ground.get_screen()
-    life_num = 2  # 我方飞机命的条数
-    bullet_num = 32 # 我方飞机子弹数
 
     def __init__(self):
         pass
@@ -26,16 +24,16 @@ class MyGame:
     def start(cls):
 
         # 生成我方飞机
-        me = MyPlane(cls.bg_size)
+        me = Plane(cls.bg_size)
         # 生成敌机
 
         enemies = enemy.gen_enemies(cls.bg_size, 45)
 
         # 中弹图片索引
-        MyPlane.me_destroy_index = 0
+        Plane.me_destroy_index = 0
         Enemy.e1_destroy_index = 0
 
-        life_num = MyPlane.life_num
+        life_num = Plane.life_num
         Score.reset()
 
         clock = pygame.time.Clock()
@@ -58,19 +56,19 @@ class MyGame:
 
             if life_num:
                 # 操作我的飞机
-                MyPlane.operation(me)
+                Plane.operation(me)
 
                 # 发射子弹
                 Bullet.operation(delay, me, enemies)
 
                 # 检测我方飞机是否被撞
-                cls.check_plane_crash(enemies, me)
+                Plane.check_plane_crash(enemies, me)
 
                 # 绘制敌机
                 Enemy.draw(delay, enemies)
 
                 # 绘制我方飞机
-                life_num = MyPlane.draw(delay, life_num, me, switch_image)
+                life_num = Plane.draw(delay, life_num, me, switch_image)
 
                 # 绘制分数
                 Score.draw_score()
@@ -94,13 +92,7 @@ class MyGame:
             pygame.display.flip()
             clock.tick(60)
 
-    @classmethod
-    def check_plane_crash(cls, enemies, me):
-        enemies_down = pygame.sprite.spritecollide(me, enemies, False, pygame.sprite.collide_mask)
-        if enemies_down:
-            me.active = False
-            for e in enemies_down:
-                e.active = False
+
 
 
 

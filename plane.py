@@ -5,7 +5,7 @@ from pygame.locals import K_UP, K_DOWN, K_LEFT, K_RIGHT
 from bullet import Bullet
 
 
-class MyPlane(pygame.sprite.Sprite):
+class Plane(pygame.sprite.Sprite):
     """
     我方飞机
     """
@@ -14,6 +14,7 @@ class MyPlane(pygame.sprite.Sprite):
     me_destroy_index = 0
     life_num = 2
     screen = Ground.get_screen()
+    bullet_num = 32 # 我方飞机子弹数
 
     def __init__(self, bg_size):
         pygame.sprite.Sprite.__init__(self)
@@ -89,11 +90,11 @@ class MyPlane(pygame.sprite.Sprite):
                 cls.screen.blit(me.image2, me.rect)
         else:
             if not (delay % 3):
-                if MyPlane.me_destroy_index == 0:
-                    MyPlane.play_sound()
-                cls.screen.blit(me.destroy_images[MyPlane.me_destroy_index], me.rect)
-                MyPlane.me_destroy_index = (MyPlane.me_destroy_index + 1) % destroy_image_size
-                if MyPlane.me_destroy_index == 0:
+                if Plane.me_destroy_index == 0:
+                    Plane.play_sound()
+                cls.screen.blit(me.destroy_images[Plane.me_destroy_index], me.rect)
+                Plane.me_destroy_index = (Plane.me_destroy_index + 1) % destroy_image_size
+                if Plane.me_destroy_index == 0:
                     life_num -= 1
                     me.reset()
         return life_num
@@ -115,6 +116,13 @@ class MyPlane(pygame.sprite.Sprite):
         if key_pressed[K_RIGHT]:
             me.move_right()
 
+    @classmethod
+    def check_plane_crash(cls, enemies, me):
+        enemies_down = pygame.sprite.spritecollide(me, enemies, False, pygame.sprite.collide_mask)
+        if enemies_down:
+            me.active = False
+            for e in enemies_down:
+                e.active = False
 
 
 
